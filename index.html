@@ -310,21 +310,31 @@
         const numnomComplemento4 = document.getElementById('numnom_complemento4');
 
         // Data para los selectores de vías
-        const viasData = [
-            { text: "Autopista", value: "AU" }, { text: "Avenida", value: "AV" },
-            { text: "Avenida Calle", value: "AC" }, { text: "Avenida Carrera", value: "AK" },
-            { text: "Bulevar", value: "BL" }, { text: "Calle", value: "CL" },
-            { text: "Carrera", value: "KR" }, { text: "Carretera", value: "CT" },
-            { text: "Circular", value: "CQ" }, { text: "Circunvalar", value: "CV" },
-            { text: "Cuentas Corridas", value: "CC" }, { text: "Diagonal", value: "DG" },
-            { text: "Pasaje", value: "PJ" }, { text: "Paseo", value: "PS" },
-            { text: "Peatonal", value: "PT" }, { text: "Transversal", value: "TV" },
-            { text: "Troncal", value: "TC" }, { text: "Variante", value: "VT" },
+	const viasData = [
+            { text: "Autopista", value: "AU" },
+            { text: "Avenida", value: "AV" },
+            { text: "Avenida Calle", value: "AC" },
+            { text: "Avenida Carrera", value: "AK" },
+            { text: "Bulevar", value: "BL" },
+            { text: "Calle", value: "CL" },
+            { text: "Carrera", value: "KR" },
+            { text: "Carretera", value: "CT" },
+            { text: "Circular", value: "CQ" },
+            { text: "Circunvalar", value: "CV" },
+            { text: "Cuentas Corridas", value: "CC" },
+            { text: "Diagonal", value: "DG" },
+            { text: "Pasaje", value: "PJ" },
+            { text: "Paseo", value: "PS" },
+            { text: "Peatonal", value: "PT" },
+            { text: "Transversal", value: "TV" },
+            { text: "Troncal", value: "TC" },
+            { text: "Variante", value: "VT" },
             { text: "Vía", value: "VI" }
         ];
 
         // Data para los selectores de complementos
-        const complementosData = [
+        /*
+	const complementosData = [
             { text: "Administración", value: "AD" }, { text: "Agrupación", value: "AG" },
             { text: "Altillo", value: "AL" }, { text: "Apartamento", value: "AP" },
             { text: "Barrio", value: "BR" }, { text: "Bloque", value: "BLQ" },
@@ -351,6 +361,63 @@
             { text: "Supermanzana", value: "SM" }, { text: "Terraza", value: "TZ" },
             { text: "Torre", value: "TO" }, { text: "Unidad", value: "UN" },
             { text: "Unidad", value: "UL" }, { text: "Urbanización", value: "UR" },
+            { text: "Zona", value: "ZN" }
+        ];
+	    */
+
+	const complementosData = [
+            { text: "Administración", value: "AD" },
+            { text: "Agrupación", value: "AG" },
+            { text: "Altillo", value: "AL" },
+            { text: "Apartamento", value: "AP" },
+            { text: "Barrio", value: "BR" },
+            { text: "Bloque", value: "BLQ" },
+            { text: "Bodega", value: "BG" },
+            { text: "Casa", value: "CS" },
+            { text: "Célula", value: "CU" },
+            { text: "Centro", value: "CE" },
+            { text: "Ciudadela", value: "CD" },
+            { text: "Conjunto", value: "CO" },
+            { text: "Consultorio", value: "CN" },
+            { text: "Depósito", value: "DP" },
+            { text: "Depósito", value: "DS" },
+            { text: "Edificio", value: "EDF" },
+            { text: "Entrada", value: "ET" },
+            { text: "Esquina", value: "EQ" },
+            { text: "Estación", value: "ES" },
+            { text: "Etapa", value: "ET" },
+            { text: "Exterior", value: "EX" },
+            { text: "Finca", value: "FI" },
+            { text: "Garaje", value: "GA" },
+            { text: "Garaje", value: "GS" },
+            { text: "Interior", value: "IN" },
+            { text: "Kilometro", value: "KM" },
+            { text: "Local", value: "LC" },
+            { text: "Local", value: "LM" },
+            { text: "Lote", value: "LT" },
+            { text: "Manzana", value: "MZ" },
+            { text: "Mezzanine", value: "MN" },
+            { text: "Módulo", value: "MD" },
+            { text: "Oficina", value: "OF" },
+            { text: "Parque", value: "PQ" },
+            { text: "Parqueadero", value: "PA" },
+            { text: "Pent-House", value: "PN" },
+            { text: "Piso", value: "PI" },
+            { text: "Planta", value: "PL" },
+            { text: "Portería", value: "PR" },
+            { text: "Predio", value: "PD" },
+            { text: "Puesto", value: "PU" },
+            { text: "Round", value: "RP" },
+            { text: "Sector", value: "SC" },
+            { text: "Semisótano", value: "SS" },
+            { text: "Sótano", value: "SO" },
+            { text: "Suite", value: "ST" },
+            { text: "Supermanzana", value: "SM" },
+            { text: "Terraza", value: "TZ" },
+            { text: "Torre", value: "TO" },
+            { text: "Unidad", value: "UN" },
+            { text: "Unidad", value: "UL" },
+            { text: "Urbanización", value: "UR" },
             { text: "Zona", value: "ZN" }
         ];
 
