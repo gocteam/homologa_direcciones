@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Direcciones</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .search-disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .pagination-info {
+            background: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 0.5rem 1rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <h5>Cargando archivo de direcciones...</h5>
+            <p class="text-muted">Este proceso puede tomar unos segundos</p>
+            <div class="progress" style="width: 300px;">
+                <div id="loadingProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-search me-2"></i>
+                            Buscador de Direcciones
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3 address-builder">
+                            <label for="addressBuilder" class="form-label">Construir Dirección:</label>
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="via_ppal" disabled>
+                                        <option value="">Vía Ppal</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" id="num_via_ppal" placeholder="Número" disabled>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="letra_via_ppal" disabled>
+                                        <option value="">Letra</option>
+                                        </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="sufijo_via_ppal" disabled>
+                                        <option value="">Sufijo</option>
+                                        <option value="BIS">BIS</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="cuadrante_via_ppal" disabled>
+                                        <option value="">Cuadrante</option>
+                                        <option value="NORTE">NORTE</option>
+                                        <option value="SUR">SUR</option>
+                                        <option value="ESTE">ESTE</option>
+                                        <option value="OESTE">OESTE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="interseccion" disabled>
+                                        <option value="">Intersección</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="number" class="form-control" id="num_interseccion" placeholder="Número Int." disabled>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="letra_interseccion" disabled>
+                                        <option value="">Letra Int.</option>
+                                        </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="sufijo_interseccion" disabled>
+                                        <option value="">Sufijo Int.</option>
+                                        <option value="BIS">BIS</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="text" class="form-control" id="placa_dir" placeholder="Placa" disabled>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="cuadrante_interseccion" disabled>
+                                        <option value="">Cuadrante Int.</option>
+                                        <option value="NORTE">NORTE</option>
+                                        <option value="SUR">SUR</option>
+                                        <option value="ESTE">ESTE</option>
+                                        <option value="OESTE">OESTE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="complemento1" disabled>
+                                        <option value="">Complemento 1</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="numnom_complemento1" placeholder="Núm./Nom. Comp. 1" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="complemento2" disabled>
+                                        <option value="">Complemento 2</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="numnom_complemento2" placeholder="Núm./Nom. Comp. 2" disabled>
+                                </div>
+                            </div>
+
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="complemento3" disabled>
+                                        <option value="">Complemento 3</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="numnom_complemento3" placeholder="Núm./Nom. Comp. 3" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="complemento4" disabled>
+                                        <option value="">Complemento 4</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="numnom_complemento4" placeholder="Núm./Nom. Comp. 4" disabled>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="searchInput" class="form-label">Dirección Buscada:</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="searchInput"
+                                    placeholder="Construye o escribe la dirección aquí"
+                                    autocomplete="off"
+                                >
+                                <button class="btn btn-outline-secondary" type="button" id="copyBtn" title="Copiar dirección">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button" id="clearBtn" disabled>
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                La búsqueda se activa después de escribir <strong>4 o más caracteres</strong> y encuentra direcciones que comiencen con el texto ingresado
+                            </div>
+                        </div>
+
+                        <div id="paginationInfo" class="pagination-info mb-3 d-none">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <span id="resultsInfo"></span>
+                                    </small>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <small class="text-muted">
+                                        Página <span id="currentPageSpan">1</span> de <span id="totalPagesSpan">1</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="resultsContainer" class="mt-3">
+                            <div id="noResults" class="alert alert-info d-none">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No se encontraron direcciones que comiencen con "<span id="searchQuery"></span>".
+                            </div>
+                            <div id="resultsList"></div>
+                        </div>
+
+                        <nav id="paginationNav" class="d-none" aria-label="Navegación de resultados">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item" id="prevPageItem">
+                                    <button class="page-link" id="prevPageBtn">
+                                        <i class="fas fa-chevron-left me-1"></i>
+                                        Anterior
+                                    </button>
+                                </li>
+                                <li class="page-item" id="nextPageItem">
+                                    <button class="page-link" id="nextPageBtn">
+                                        Siguiente
+                                        <i class="fas fa-chevron-right ms-1"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <div id="statsContainer" class="mt-3">
+                            <small class="text-muted" id="statsText">Preparando datos...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuración
+        const CONFIG = {
+            jsonFile: 'ms_address_minify.json', // Tu archivo JSON
+            itemsPerPage: 15,
+            searchDelay: 200 // ms de delay para evitar búsquedas excesivas
+        };
+
+        // Variables globales
+        let addressData = null;
+        let normalizedAddresses = []; // Versión en mayúsculas para búsqueda rápida
+        let currentResults = [];
+        let currentPage = 1;
+        let totalPages = 1;
+        let searchTimeout;
+        let isBuildingAddress = false; // Flag para saber si la dirección se construye con los selectores
+
+        // Elementos DOM
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingProgress = document.getElementById('loadingProgress');
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn'); // Botón de copiar
+        const resultsList = document.getElementById('resultsList');
+        const noResults = document.getElementById('noResults');
+        const statsText = document.getElementById('statsText');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const paginationNav = document.getElementById('paginationNav');
+        const resultsInfo = document.getElementById('resultsInfo');
+        const currentPageSpan = document.getElementById('currentPageSpan');
+        const totalPagesSpan = document.getElementById('totalPagesSpan');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+        const prevPageItem = document.getElementById('prevPageItem');
+        const nextPageItem = document.getElementById('nextPageItem');
+
+        // Elementos DOM para el constructor de direcciones - Primer bloque
+        const viaPpal = document.getElementById('via_ppal');
+        const numViaPpal = document.getElementById('num_via_ppal');
+        const letraViaPpal = document.getElementById('letra_via_ppal');
+        const sufijoViaPpal = document.getElementById('sufijo_via_ppal');
+        const cuadranteViaPpal = document.getElementById('cuadrante_via_ppal');
+
+        // Elementos DOM para el constructor de direcciones - Segundo bloque
+        const interseccion = document.getElementById('interseccion');
+        const numInterseccion = document.getElementById('num_interseccion');
+        const letraInterseccion = document.getElementById('letra_interseccion');
+        const sufijoInterseccion = document.getElementById('sufijo_interseccion');
+        const placaDir = document.getElementById('placa_dir');
+        const cuadranteInterseccion = document.getElementById('cuadrante_interseccion');
+
+        // Elementos DOM para el constructor de direcciones - Tercer bloque (Complementos)
+        const complemento1 = document.getElementById('complemento1');
+        const numnomComplemento1 = document.getElementById('numnom_complemento1');
+        const complemento2 = document.getElementById('complemento2');
+        const numnomComplemento2 = document.getElementById('numnom_complemento2');
+        const complemento3 = document.getElementById('complemento3');
+        const numnomComplemento3 = document.getElementById('numnom_complemento3');
+        const complemento4 = document.getElementById('complemento4');
+        const numnomComplemento4 = document.getElementById('numnom_complemento4');
+
+        // Data para los selectores de vías
+        const viasData = [
+            { text: "Autopista", value: "AU" },
+            { text: "Avenida", value: "AV" },
+            { text: "Avenida Calle", value: "AC" },
+            { text: "Avenida Carrera", value: "AK" },
+            { text: "Bulevar", value: "BL" },
+            { text: "Calle", value: "CL" },
+            { text: "Carrera", value: "KR" },
+            { text: "Carretera", value: "CT" },
+            { text: "Circular", value: "CQ" },
+            { text: "Circunvalar", value: "CV" },
+            { text: "Cuentas Corridas", value: "CC" },
+            { text: "Diagonal", value: "DG" },
+            { text: "Pasaje", value: "PJ" },
+            { text: "Paseo", value: "PS" },
+            { text: "Peatonal", value: "PT" },
+            { text: "Transversal", value: "TV" },
+            { text: "Troncal", value: "TC" },
+            { text: "Variante", value: "VT" },
+            { text: "Vía", value: "VI" }
+        ];
+
+        // Data para los selectores de complementos
+        const complementosData = [
+            { text: "Administración", value: "AD" },
+            { text: "Agrupación", value: "AG" },
+            { text: "Altillo", value: "AL" },
+            { text: "Apartamento", value: "AP" },
+            { text: "Barrio", value: "BR" },
+            { text: "Bloque", value: "BLQ" },
+            { text: "Bodega", value: "BG" },
+            { text: "Casa", value: "CS" },
+            { text: "Célula", value: "CU" },
+            { text: "Centro", value: "CE" },
+            { text: "Ciudadela", value: "CD" },
+            { text: "Conjunto", value: "CO" },
+            { text: "Consultorio", value: "CN" },
+            { text: "Depósito", value: "DP" },
+            { text: "Depósito", value: "DS" },
+            { text: "Edificio", value: "EDF" },
+            { text: "Entrada", value: "ET" },
+            { text: "Esquina", value: "EQ" },
+            { text: "Estación", value: "ES" },
+            { text: "Etapa", value: "ET" },
+            { text: "Exterior", value: "EX" },
+            { text: "Finca", value: "FI" },
+            { text: "Garaje", value: "GA" },
+            { text: "Garaje", value: "GS" },
+            { text: "Interior", value: "INT" },
+            { text: "Kilometro", value: "KM" },
+            { text: "Local", value: "LC" },
+            { text: "Local", value: "LM" },
+            { text: "Lote", value: "LT" },
+            { text: "Manzana", value: "MZ" },
+            { text: "Mezzanine", value: "MN" },
+            { text: "Módulo", value: "MD" },
+            { text: "Oficina", value: "OF" },
+            { text: "Parque", value: "PQ" },
+            { text: "Parqueadero", value: "PA" },
+            { text: "Pent-House", value: "PN" },
+            { text: "Piso", value: "PISO" },
+            { text: "Planta", value: "PL" },
+            { text: "Portería", value: "PR" },
+            { text: "Predio", value: "PD" },
+            { text: "Puesto", value: "PU" },
+            { text: "Round", value: "RP" },
+            { text: "Sector", value: "SC" },
+            { text: "Semisótano", value: "SS" },
+            { text: "Sótano", value: "SO" },
+            { text: "Suite", value: "ST" },
+            { text: "Supermanzana", value: "SM" },
+            { text: "Terraza", value: "TZ" },
+            { text: "Torre", value: "TO" },
+            { text: "Unidad", value: "UN" },
+            { text: "Unidad", value: "UL" },
+            { text: "Urbanización", value: "UR" },
+            { text: "Zona", value: "ZN" }
+        ];
+
+        // Función para cargar el archivo JSON
+        async function loadAddressData() {
+            try {
+                updateLoadingProgress(10, 'Descargando archivo...');
+
+                const response = await fetch(CONFIG.jsonFile);
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+
+                updateLoadingProgress(50, 'Procesando datos...');
+
+                addressData = await response.json();
+
+                updateLoadingProgress(80, 'Optimizando búsqueda...');
+
+                // Pre-procesar datos para búsqueda rápida
+                normalizedAddresses = addressData.rows.map((row, index) => ({
+                    original: row[0],
+                    normalized: row[0].toUpperCase(),
+                    index: index
+                }));
+
+                updateLoadingProgress(100, 'Completado');
+
+                // Habilitar interfaz
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    // Habilitar selectores del constructor de direcciones - Primer bloque
+                    viaPpal.disabled = false;
+                    numViaPpal.disabled = false;
+                    letraViaPpal.disabled = false;
+                    sufijoViaPpal.disabled = false;
+                    cuadranteViaPpal.disabled = false;
+
+                    // Habilitar selectores del constructor de direcciones - Segundo bloque
+                    interseccion.disabled = false;
+                    numInterseccion.disabled = false;
+                    letraInterseccion.disabled = false;
+                    sufijoInterseccion.disabled = false;
+                    placaDir.disabled = false;
+                    cuadranteInterseccion.disabled = false;
+
+                    // Habilitar selectores del constructor de direcciones - Tercer bloque
+                    complemento1.disabled = false;
+                    numnomComplemento1.disabled = false;
+                    complemento2.disabled = false;
+                    numnomComplemento2.disabled = false;
+                    complemento3.disabled = false;
+                    numnomComplemento3.disabled = false;
+                    complemento4.disabled = false;
+                    numnomComplemento4.disabled = false;
+
+                    // clearBtn y copyBtn se habilitan
+                    clearBtn.disabled = false;
+                    copyBtn.disabled = false;
+
+                    statsText.textContent = `${addressData.rows.length} direcciones cargadas y listas para búsqueda`;
+                }, 500);
+
+            } catch (error) {
+                console.error('Error cargando el archivo:', error);
+                updateLoadingProgress(0, 'Error al cargar el archivo');
+                setTimeout(() => {
+                    loadingOverlay.innerHTML = `
+                        <div class="text-center">
+                            <i class="fas fa-exclamation-triangle text-danger mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="text-danger">Error al cargar el archivo</h5>
+                            <p class="text-muted">Verifica que el archivo "${CONFIG.jsonFile}" esté disponible</p>
+                            <button class="btn btn-primary" onclick="location.reload()">
+                                <i class="fas fa-redo me-2"></i>
+                                Reintentar
+                            </button>
+                        </div>
+                    `;
+                }, 1000);
+            }
+        }
+
+        // Función para actualizar la barra de progreso
+        function updateLoadingProgress(percent, message) {
+            loadingProgress.style.width = `${percent}%`;
+            loadingProgress.setAttribute('aria-valuenow', percent);
+            if (message) {
+                const messageElement = loadingOverlay.querySelector('p');
+                if (messageElement) {
+                    messageElement.textContent = message;
+                }
+            }
+        }
+
+        // Función para realizar la búsqueda
+        function searchAddresses(query) {
+            if (!query.trim() || !normalizedAddresses.length) {
+                clearResults();
+                return;
+            }
+
+            // Solo buscar si tiene 4 o más caracteres
+            if (query.trim().length < 4) {
+                clearResults();
+                statsText.textContent = `Escribe al menos 4 caracteres para buscar (${query.trim().length}/4)`;
+                return;
+            }
+
+            const queryUpper = query.toUpperCase();
+
+            // Buscar direcciones que COMIENCEN con el texto (startsWith)
+            currentResults = normalizedAddresses.filter(item =>
+                item.normalized.startsWith(queryUpper)
+            );
+
+            currentPage = 1;
+            displayResults();
+        }
+
+        // Función para limpiar resultados
+        function clearResults() {
+            resultsList.innerHTML = '';
+            noResults.classList.add('d-none');
+            paginationInfo.classList.add('d-none');
+            paginationNav.classList.add('d-none');
+            currentResults = [];
+            currentPage = 1;
+            if (addressData) {
+                statsText.textContent = `${addressData.rows.length} direcciones disponibles`;
+            }
+        }
+
+        // Función para mostrar los resultados con paginación
+        function displayResults() {
+            if (currentResults.length === 0) {
+                resultsList.innerHTML = '';
+                noResults.classList.remove('d-none');
+                document.getElementById('searchQuery').textContent = searchInput.value;
+                paginationInfo.classList.add('d-none');
+                paginationNav.classList.add('d-none');
+                statsText.textContent = 'No se encontraron coincidencias';
+                return;
+            }
+
+            noResults.classList.add('d-none');
+
+            // Calcular paginación
+            totalPages = Math.ceil(currentResults.length / CONFIG.itemsPerPage);
+            const startIndex = (currentPage - 1) * CONFIG.itemsPerPage;
+            const endIndex = Math.min(startIndex + CONFIG.itemsPerPage, currentResults.length);
+            const currentPageResults = currentResults.slice(startIndex, endIndex);
+
+            // Crear lista de resultados
+            resultsList.innerHTML = '';
+            const listGroup = document.createElement('div');
+            listGroup.className = 'list-group';
+
+            currentPageResults.forEach((item, index) => {
+                const globalIndex = startIndex + index + 1;
+                const listItem = document.createElement('div');
+                listItem.className = 'list-group-item list-group-item-action';
+
+                // Resaltar el texto coincidente
+                const highlightedAddress = highlightMatch(item.original, searchInput.value);
+
+                listItem.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            <span>${highlightedAddress}</span>
+                        </div>
+                        <small class="text-muted">#${globalIndex}</small>
+                    </div>
+                `;
+
+                // Añadir evento click para seleccionar la dirección
+                listItem.addEventListener('click', () => {
+                    searchInput.value = item.original; // Llenar searchInput con la dirección original
+                    clearResults(); // Limpiar la lista de resultados después de la selección
+                    searchInput.focus(); // Enfocar el campo de búsqueda
+                });
+
+                // Agregar efecto hover
+                listItem.addEventListener('mouseenter', () => {
+                    listItem.style.backgroundColor = '#f8f9fa';
+                });
+                listItem.addEventListener('mouseleave', () => {
+                    listItem.style.backgroundColor = '';
+                });
+
+                listGroup.appendChild(listItem);
+            });
+
+            resultsList.appendChild(listGroup);
+
+            // Actualizar información de paginación
+            updatePaginationInfo();
+
+            // Mostrar estadísticas
+            statsText.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${currentResults.length} resultados encontrados`;
+        }
+
+        // Función para resaltar el texto coincidente
+        function highlightMatch(text, query) {
+            if (!query.trim()) return text;
+
+            const regex = new RegExp(`^(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<mark class="bg-warning text-dark">$1</mark>');
+        }
+
+        // Función para actualizar la información de paginación
+        function updatePaginationInfo() {
+            const startIndex = (currentPage - 1) * CONFIG.itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * CONFIG.itemsPerPage, currentResults.length);
+
+            resultsInfo.textContent = `${startIndex}-${endIndex} de ${currentResults.length} resultados`;
+            currentPageSpan.textContent = currentPage;
+            totalPagesSpan.textContent = totalPages;
+
+            // Mostrar/ocultar controles de paginación
+            if (totalPages > 1) {
+                paginationInfo.classList.remove('d-none');
+                paginationNav.classList.remove('d-none');
+
+                // Habilitar/deshabilitar botones
+                prevPageItem.classList.toggle('disabled', currentPage === 1);
+                nextPageItem.classList.toggle('disabled', currentPage === totalPages);
+            } else {
+                paginationInfo.classList.add('d-none');
+                paginationNav.classList.add('d-none');
+            }
+        }
+
+        // Función para rellenar las letras en el selector
+        function populateLetters() {
+            for (let i = 0; i < 26; i++) {
+                const letter = String.fromCharCode(65 + i); // ASCII para 'A'
+                const option = document.createElement('option');
+                option.value = letter;
+                option.textContent = letter;
+                letraViaPpal.appendChild(option);
+                letraInterseccion.appendChild(option.cloneNode(true)); // Clonar para el segundo selector
+            }
+        }
+
+        // NUEVO: Función para rellenar los selectores de vías
+        function populateVias() {
+            // Limpiar opciones existentes (excepto la primera "Vía Ppal" o "Intersección")
+            viaPpal.innerHTML = '<option value="">Vía Ppal</option>';
+            interseccion.innerHTML = '<option value="">Intersección</option>';
+
+            viasData.forEach(via => {
+                const optionPpal = document.createElement('option');
+                optionPpal.value = via.value;
+                optionPpal.textContent = via.text;
+                viaPpal.appendChild(optionPpal);
+
+                const optionInterseccion = document.createElement('option');
+                optionInterseccion.value = via.value;
+                optionInterseccion.textContent = via.text;
+                interseccion.appendChild(optionInterseccion);
+            });
+        }
+
+        // NUEVO: Función para rellenar los selectores de complementos
+        function populateComplementos() {
+            // Limpiar opciones existentes
+            complemento1.innerHTML = '<option value="">Complemento 1</option>';
+            complemento2.innerHTML = '<option value="">Complemento 2</option>';
+            complemento3.innerHTML = '<option value="">Complemento 3</option>';
+            complemento4.innerHTML = '<option value="">Complemento 4</option>';
+
+            complementosData.forEach(comp => {
+                const option1 = document.createElement('option');
+                option1.value = comp.value;
+                option1.textContent = comp.text;
+                complemento1.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = comp.value;
+                option2.textContent = comp.text;
+                complemento2.appendChild(option2.cloneNode(true));
+
+                const option3 = document.createElement('option');
+                option3.value = comp.value;
+                option3.textContent = comp.text;
+                complemento3.appendChild(option3.cloneNode(true));
+
+                const option4 = document.createElement('option');
+                option4.value = comp.value;
+                option4.textContent = comp.text;
+                complemento4.appendChild(option4.cloneNode(true));
+            });
+        }
+
+
+        // Función para actualizar el searchInput con los valores de los selectores y campos de texto
+        function updateSearchInput() {
+            isBuildingAddress = true; // Establecer la bandera a true
+            const via = viaPpal.value;
+            const num = numViaPpal.value;
+            const letra = letraViaPpal.value;
+            const sufijo = sufijoViaPpal.value;
+            const cuadViaPpal = cuadranteViaPpal.value;
+
+            const int = interseccion.value;
+            const numInt = numInterseccion.value;
+            const letraInt = letraInterseccion.value;
+            const sufijoInt = sufijoInterseccion.value;
+            const placa = placaDir.value;
+            const cuadInt = cuadranteInterseccion.value;
+
+            const comp1 = complemento1.value;
+            const numnomComp1 = numnomComplemento1.value.toUpperCase();
+            const comp2 = complemento2.value;
+            const numnomComp2 = numnomComplemento2.value.toUpperCase();
+            const comp3 = complemento3.value;
+            const numnomComp3 = numnomComplemento3.value.toUpperCase();
+            const comp4 = complemento4.value;
+            const numnomComp4 = numnomComplemento4.value.toUpperCase();
+
+
+            let addressParts = [];
+            let principalViaPart = '';
+            if (via) principalViaPart += via;
+            if (num) principalViaPart += ` ${num}`; // Agregar espacio antes del número
+            if (letra) principalViaPart += letra; // NO agregar espacio antes de la letra
+            if (sufijo) principalViaPart += ` ${sufijo}`; // Agregar espacio antes del sufijo
+            if (cuadViaPpal) principalViaPart += ` ${cuadViaPpal}`; // Agregar espacio antes del cuadrante
+            if (principalViaPart) addressParts.push(principalViaPart.trim());
+
+
+            let intersectionPart = '';
+            if (int) intersectionPart += int;
+            if (numInt) intersectionPart += ` ${numInt}`; // Agregar espacio antes del número de intersección
+            if (letraInt) intersectionPart += letraInt; // NO agregar espacio antes de la letra de intersección
+            if (sufijoInt) intersectionPart += ` ${sufijoInt}`; // Agregar espacio antes del sufijo de intersección
+            if (placa) intersectionPart += ` ${placa}`; // Agregar espacio antes de la placa
+            if (cuadInt) intersectionPart += ` ${cuadInt}`; // Agregar espacio antes del cuadrante de intersección
+            if (intersectionPart) addressParts.push(intersectionPart.trim());
+
+
+            if (comp1) addressParts.push(comp1);
+            if (numnomComp1) addressParts.push(numnomComp1);
+            if (comp2) addressParts.push(comp2);
+            if (numnomComp2) addressParts.push(numnomComp2);
+            if (comp3) addressParts.push(comp3);
+            if (numnomComp3) addressParts.push(numnomComp3);
+            if (comp4) addressParts.push(comp4);
+            if (numnomComp4) addressParts.push(numnomComp4);
+
+
+            const constructedAddress = addressParts.join(' ');
+            searchInput.value = constructedAddress; // Actualizar el valor del searchInput
+
+            // Disparar la búsqueda con el valor construido
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchAddresses(constructedAddress);
+                isBuildingAddress = false; // Restablecer la bandera después de la búsqueda
+            }, CONFIG.searchDelay);
+        }
+
+        // Función para copiar el texto del searchInput al portapapeles
+        function copySearchInput() {
+            searchInput.select(); // Selecciona el texto dentro del input
+            searchInput.setSelectionRange(0, 99999); // Para dispositivos móviles
+
+            // Intenta copiar el texto
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'Copiado!' : 'Error al copiar';
+                alert(msg); // Opcional: Mostrar una alerta o un tooltip
+            } catch (err) {
+                console.error('Error al copiar el texto: ', err);
+                // Si execCommand falla (ej. en navegadores modernos sin HTTPS o si no hay interacción del usuario)
+                // Se puede usar la API Navigator.clipboard.writeText
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(searchInput.value)
+                        .then(() => alert('Copiado!'))
+                        .catch(err => console.error('Error al copiar con Clipboard API: ', err));
+                } else {
+                    alert('Tu navegador no soporta la copia automática. Por favor, selecciona y copia manualmente.');
+                }
+            }
+        }
+
+
+        // Event listeners para los campos del constructor
+        viaPpal.addEventListener('change', updateSearchInput);
+        numViaPpal.addEventListener('input', updateSearchInput);
+        letraViaPpal.addEventListener('change', updateSearchInput);
+        sufijoViaPpal.addEventListener('change', updateSearchInput);
+        cuadranteViaPpal.addEventListener('change', updateSearchInput);
+
+        interseccion.addEventListener('change', updateSearchInput);
+        numInterseccion.addEventListener('input', updateSearchInput);
+        letraInterseccion.addEventListener('change', updateSearchInput);
+        sufijoInterseccion.addEventListener('change', updateSearchInput);
+        placaDir.addEventListener('input', updateSearchInput);
+        cuadranteInterseccion.addEventListener('change', updateSearchInput);
+
+        complemento1.addEventListener('change', updateSearchInput);
+        numnomComplemento1.addEventListener('input', updateSearchInput);
+        complemento2.addEventListener('change', updateSearchInput);
+        numnomComplemento2.addEventListener('input', updateSearchInput);
+        complemento3.addEventListener('change', updateSearchInput);
+        numnomComplemento3.addEventListener('input', updateSearchInput);
+        complemento4.addEventListener('change', updateSearchInput);
+        numnomComplemento4.addEventListener('input', updateSearchInput);
+
+
+        // Event listener para el searchInput (ahora editable)
+        searchInput.addEventListener('input', (e) => {
+            // Solo si el usuario está escribiendo directamente y no es una actualización programática
+            if (!isBuildingAddress) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchAddresses(e.target.value);
+                }, CONFIG.searchDelay);
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            // Limpiar todos los campos del constructor de direcciones
+            viaPpal.value = '';
+            numViaPpal.value = '';
+            letraViaPpal.value = '';
+            sufijoViaPpal.value = '';
+            cuadranteViaPpal.value = '';
+
+            interseccion.value = '';
+            numInterseccion.value = '';
+            letraInterseccion.value = '';
+            sufijoInterseccion.value = '';
+            placaDir.value = '';
+            cuadranteInterseccion.value = '';
+
+            complemento1.value = '';
+            numnomComplemento1.value = '';
+            complemento2.value = '';
+            numnomComplemento2.value = '';
+            complemento3.value = '';
+            numnomComplemento3.value = '';
+            complemento4.value = '';
+            numnomComplemento4.value = '';
+
+            searchInput.value = ''; // Limpiar también el campo de búsqueda
+            clearResults();
+            searchInput.focus(); // Enfocar el searchInput después de limpiar
+        });
+
+        // Event listener para el nuevo botón de copiar
+        copyBtn.addEventListener('click', copySearchInput);
+
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayResults();
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayResults();
+            }
+        });
+
+        // Atajos de teclado
+        document.addEventListener('keydown', (e) => {
+            // Solo actuar si no estamos editando un input de texto o número
+            if (e.target.tagName === 'INPUT' && (e.target.type === 'text' || e.target.type === 'number')) {
+                return;
+            }
+            if (e.target.tagName === 'SELECT') { // También si estamos en un selector
+                return;
+            }
+
+            if (e.key === 'ArrowLeft' && currentPage > 1) {
+                e.preventDefault();
+                currentPage--;
+                displayResults();
+            } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+                e.preventDefault();
+                currentPage++;
+                displayResults();
+            }
+        });
+
+        // Inicializar la aplicación
+        window.addEventListener('load', () => {
+            populateLetters(); // Rellenar el selector de letras
+            populateVias(); // NUEVO: Rellenar selectores de vías
+            populateComplementos(); // NUEVO: Rellenar selectores de complementos
+            loadAddressData();
+        });
+    </script>
+</body>
+</html>
