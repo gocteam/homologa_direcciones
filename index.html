@@ -505,37 +505,96 @@
                 selects.forEach(select => select.appendChild(option.cloneNode(true)));
             });
         }
+
         function updateSearchInput() {
             isBuildingAddress = true;
-            let addressParts = [];
-            const fields = [
-                viaPpal.value, numViaPpal.value, letraViaPpal.value, sufijoViaPpal.value, cuadranteViaPpal.value, 
-                interseccion.value, numInterseccion.value, letraInterseccion.value, sufijoInterseccion.value, placaDir.value, cuadranteInterseccion.value, // Separador visual
-                complemento1.value, numnomComplemento1.value.toUpperCase(),
-                complemento2.value, numnomComplemento2.value.toUpperCase(),
-                complemento3.value, numnomComplemento3.value.toUpperCase(),
-                complemento4.value, numnomComplemento4.value.toUpperCase()
-            ];
+            let mainVia = [];
+            let intersection = [];
+            let complements = [];
 
-            let currentPart = '';
-            fields.forEach(field => {
-                if(field === '#') {
-                    if(currentPart.trim()) addressParts.push(currentPart.trim());
-                    currentPart = '';
-                } else if(field) {
-                    currentPart += ` ${field}`;
+            // --- Vía Principal ---
+            if (viaPpal.value) mainVia.push(viaPpal.value);
+            
+            if (numViaPpal.value) {
+                let part = numViaPpal.value;
+                if (letraViaPpal.value) {
+                    part += letraViaPpal.value; // Une número y letra sin espacio
                 }
-            });
-            if(currentPart.trim()) addressParts.push(currentPart.trim());
+                mainVia.push(part);
+            } else if (letraViaPpal.value) {
+                mainVia.push(letraViaPpal.value);
+            }
 
-            const constructedAddress = addressParts.join(' ').replace(/\s+/g, ' ').trim();
+            if (sufijoViaPpal.value) mainVia.push(sufijoViaPpal.value);
+            if (cuadranteViaPpal.value) mainVia.push(cuadranteViaPpal.value);
+
+            // --- Intersección ---
+            if (interseccion.value) intersection.push(interseccion.value);
+            
+            if (numInterseccion.value) {
+                let part = numInterseccion.value;
+                if (letraInterseccion.value) {
+                    part += letraInterseccion.value; // Une número y letra sin espacio
+                }
+                intersection.push(part);
+            } else if (letraInterseccion.value) {
+                intersection.push(letraInterseccion.value);
+            }
+            
+            if (sufijoInterseccion.value) intersection.push(sufijoInterseccion.value);
+
+            // --- Placa ---
+            if (placaDir.value) {
+                // Añade la placa, precedida por un guión si ya hay una parte de intersección.
+                if (intersection.length > 0) {
+                    intersection.push('-');
+                    intersection.push(placaDir.value);
+                } else {
+                    intersection.push(placaDir.value);
+                }
+            }
+
+            if (cuadranteInterseccion.value) intersection.push(cuadranteInterseccion.value);
+
+            // --- Complementos ---
+            const addComplement = (comp, num) => {
+                if (comp) {
+                    let part = comp;
+                    if (num) part += ` ${num.toUpperCase()}`;
+                    complements.push(part);
+                } else if (num) {
+                    complements.push(num.toUpperCase());
+                }
+            };
+            addComplement(complemento1.value, numnomComplemento1.value);
+            addComplement(complemento2.value, numnomComplemento2.value);
+            addComplement(complemento3.value, numnomComplemento3.value);
+            addComplement(complemento4.value, numnomComplemento4.value);
+            
+            // --- Ensamblaje Final ---
+            let finalAddress = mainVia.join(' ');
+
+            if (intersection.length > 0) {
+                let intersectionString = intersection.join(' ');
+                // Une el número de intersección con la placa usando un guión, sin espacios.
+                intersectionString = intersectionString.replace(/\s-\s/g, '-');
+                finalAddress += ` # ${intersectionString}`;
+            }
+
+            if (complements.length > 0) {
+                finalAddress += ` ${complements.join(' ')}`;
+            }
+
+            const constructedAddress = finalAddress.replace(/\s+/g, ' ').trim();
             searchInput.value = constructedAddress;
+
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 searchAddresses(constructedAddress);
                 isBuildingAddress = false;
             }, CONFIG.searchDelay);
         }
+
         function copySearchInput() {
             if (!navigator.clipboard) {
                 try {
