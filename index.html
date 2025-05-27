@@ -508,62 +508,56 @@
 
         function updateSearchInput() {
             isBuildingAddress = true;
-            let mainVia = [];
-            let intersection = [];
-            let complements = [];
+            const addressParts = [];
 
             // --- Vía Principal ---
-            if (viaPpal.value) mainVia.push(viaPpal.value);
+            if (viaPpal.value) addressParts.push(viaPpal.value);
             
             if (numViaPpal.value) {
                 let part = numViaPpal.value;
                 if (letraViaPpal.value) {
-                    part += letraViaPpal.value; // Une número y letra sin espacio
+                    part += letraViaPpal.value; // Une número y letra
                 }
-                mainVia.push(part);
+                addressParts.push(part);
             } else if (letraViaPpal.value) {
-                mainVia.push(letraViaPpal.value);
+                addressParts.push(letraViaPpal.value);
             }
 
-            if (sufijoViaPpal.value) mainVia.push(sufijoViaPpal.value);
-            if (cuadranteViaPpal.value) mainVia.push(cuadranteViaPpal.value);
+            if (sufijoViaPpal.value) addressParts.push(sufijoViaPpal.value);
+            if (cuadranteViaPpal.value) addressParts.push(cuadranteViaPpal.value);
 
             // --- Intersección ---
-            if (interseccion.value) intersection.push(interseccion.value);
+            if (interseccion.value) addressParts.push(interseccion.value);
             
             if (numInterseccion.value) {
                 let part = numInterseccion.value;
                 if (letraInterseccion.value) {
-                    part += letraInterseccion.value; // Une número y letra sin espacio
+                    part += letraInterseccion.value; // Une número y letra
                 }
-                intersection.push(part);
+                addressParts.push(part);
             } else if (letraInterseccion.value) {
-                intersection.push(letraInterseccion.value);
+                addressParts.push(letraInterseccion.value);
             }
             
-            if (sufijoInterseccion.value) intersection.push(sufijoInterseccion.value);
+            if (sufijoInterseccion.value) addressParts.push(sufijoInterseccion.value);
 
             // --- Placa ---
             if (placaDir.value) {
-                // Añade la placa, precedida por un guión si ya hay una parte de intersección.
-                if (intersection.length > 0) {
-                    intersection.push('-');
-                    intersection.push(placaDir.value);
-                } else {
-                    intersection.push(placaDir.value);
-                }
+                addressParts.push(placaDir.value);
             }
 
-            if (cuadranteInterseccion.value) intersection.push(cuadranteInterseccion.value);
+            if (cuadranteInterseccion.value) addressParts.push(cuadranteInterseccion.value);
 
             // --- Complementos ---
             const addComplement = (comp, num) => {
                 if (comp) {
                     let part = comp;
-                    if (num) part += ` ${num.toUpperCase()}`;
-                    complements.push(part);
+                    if (num) {
+                        part += ` ${num.toUpperCase()}`;
+                    }
+                    addressParts.push(part);
                 } else if (num) {
-                    complements.push(num.toUpperCase());
+                    addressParts.push(num.toUpperCase());
                 }
             };
             addComplement(complemento1.value, numnomComplemento1.value);
@@ -572,20 +566,8 @@
             addComplement(complemento4.value, numnomComplemento4.value);
             
             // --- Ensamblaje Final ---
-            let finalAddress = mainVia.join(' ');
-
-            if (intersection.length > 0) {
-                let intersectionString = intersection.join(' ');
-                // Une el número de intersección con la placa usando un guión, sin espacios.
-                intersectionString = intersectionString.replace(/\s-\s/g, '-');
-                finalAddress += ` # ${intersectionString}`;
-            }
-
-            if (complements.length > 0) {
-                finalAddress += ` ${complements.join(' ')}`;
-            }
-
-            const constructedAddress = finalAddress.replace(/\s+/g, ' ').trim();
+            const constructedAddress = addressParts.join(' ').replace(/\s+/g, ' ').trim();
+            
             searchInput.value = constructedAddress;
 
             clearTimeout(searchTimeout);
