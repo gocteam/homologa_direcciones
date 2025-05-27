@@ -66,112 +66,117 @@
                         </h1>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3 address-builder">
-                            <label class="form-label">Construir Dirección:</label>
+						<div class="mb-3 address-builder">
+						  <label class="form-label">Construir Dirección:</label>
 
-                            <div class="row g-2 mb-2">
-                                <div class="col-sm-6 col-md-3">
-                                    <select class="form-select" id="via_ppal" disabled>
-                                        <option value="">Vía Ppal</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md-2">
-                                    <input type="number" class="form-control" id="num_via_ppal" placeholder="Número" disabled>
-                                </div>
-                                <div class="col-4 col-md-2">
-                                    <select class="form-select" id="letra_via_ppal" disabled>
-                                        <option value="">Letra</option>
-                                    </select>
-                                </div>
-                                <div class="col-4 col-md-2">
-                                    <select class="form-select" id="sufijo_via_ppal" disabled>
-                                        <option value="">Sufijo</option>
-                                        <option value="BIS">BIS</option>
-                                    </select>
-                                </div>
-                                <div class="col-4 col-md-3">
-                                    <select class="form-select" id="cuadrante_via_ppal" disabled>
-                                        <option value="">Cuadrante</option>
-                                        <option value="NORTE">NORTE</option>
-                                        <option value="SUR">SUR</option>
-                                        <option value="ESTE">ESTE</option>
-                                        <option value="OESTE">OESTE</option>
-                                    </select>
-                                </div>
-                            </div>
+						  <!-- Fila: Vía principal y número en misma línea (mobile-friendly) -->
+						  <div class="row g-2 mb-2">
+							<div class="col-6 col-md-3">
+							  <select class="form-select" id="via_ppal" disabled>
+								<option value="">Vía Ppal</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-2">
+							  <input type="number" class="form-control" id="num_via_ppal" placeholder="Número" disabled>
+							</div>
+							<div class="col-4 col-md-2">
+							  <select class="form-select" id="letra_via_ppal" disabled>
+								<option value="">Letra</option>
+							  </select>
+							</div>
+							<div class="col-4 col-md-2">
+							  <select class="form-select" id="sufijo_via_ppal" disabled>
+								<option value="">Sufijo</option>
+								<option value="BIS">BIS</option>
+							  </select>
+							</div>
+							<div class="col-4 col-md-3">
+							  <select class="form-select" id="cuadrante_via_ppal" disabled>
+								<option value="">Cuadrante</option>
+								<option value="NORTE">NORTE</option>
+								<option value="SUR">SUR</option>
+								<option value="ESTE">ESTE</option>
+								<option value="OESTE">OESTE</option>
+							  </select>
+							</div>
+						  </div>
 
-                            <div class="row g-2 mb-2">
-                                <div class="col-sm-6 col-md-3">
-                                    <select class="form-select" id="interseccion" disabled>
-                                        <option value="">Intersección</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 col-md-2">
-                                    <input type="number" class="form-control" id="num_interseccion" placeholder="Número Int." disabled>
-                                </div>
-                                <div class="col-4 col-md-2">
-                                    <select class="form-select" id="letra_interseccion" disabled>
-                                        <option value="">Letra Int.</option>
-                                    </select>
-                                </div>
-                                <div class="col-4 col-md-2">
-                                    <select class="form-select" id="sufijo_interseccion" disabled>
-                                        <option value="">Sufijo Int.</option>
-                                        <option value="BIS">BIS</option>
-                                    </select>
-                                </div>
-                                <div class="col-4 col-md-1">
-                                    <input type="text" class="form-control" id="placa_dir" placeholder="Placa" disabled>
-                                </div>
-                                <div class="col-12 col-md-2 mt-2 mt-md-0">
-                                    <select class="form-select" id="cuadrante_interseccion" disabled>
-                                        <option value="">Cuadrante Int.</option>
-                                        <option value="NORTE">NORTE</option>
-                                        <option value="SUR">SUR</option>
-                                        <option value="ESTE">ESTE</option>
-                                        <option value="OESTE">OESTE</option>
-                                    </select>
-                                </div>
-                            </div>
+						  <!-- Fila: Intersección y número en misma línea (mobile-friendly) -->
+						  <div class="row g-2 mb-2">
+							<div class="col-6 col-md-3">
+							  <select class="form-select" id="interseccion" disabled>
+								<option value="">Intersección</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-2">
+							  <input type="number" class="form-control" id="num_interseccion" placeholder="Número Int." disabled>
+							</div>
+							<div class="col-4 col-md-2">
+							  <select class="form-select" id="letra_interseccion" disabled>
+								<option value="">Letra Int.</option>
+							  </select>
+							</div>
+							<div class="col-4 col-md-2">
+							  <select class="form-select" id="sufijo_interseccion" disabled>
+								<option value="">Sufijo Int.</option>
+								<option value="BIS">BIS</option>
+							  </select>
+							</div>
+							<div class="col-4 col-md-1">
+							  <!-- AJUSTE: input de placa cambiado a numérico -->
+							  <input type="number" class="form-control" id="placa_dir" placeholder="Placa" disabled>
+							</div>
+							<div class="col-12 col-md-2 mt-2 mt-md-0">
+							  <select class="form-select" id="cuadrante_interseccion" disabled>
+								<option value="">Cuadrante Int.</option>
+								<option value="NORTE">NORTE</option>
+								<option value="SUR">SUR</option>
+								<option value="ESTE">ESTE</option>
+								<option value="OESTE">OESTE</option>
+							  </select>
+							</div>
+						  </div>
 
-                            <div class="row g-2 mb-2">
-                                <div class="col-6 col-md-3">
-                                    <select class="form-select" id="complemento1" disabled>
-                                        <option value="">Complemento 1</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <input type="text" class="form-control" id="numnom_complemento1" placeholder="Núm./Nom." disabled>
-                                </div>
-                                <div class="col-6 col-md-3 mt-2 mt-md-0">
-                                    <select class="form-select" id="complemento2" disabled>
-                                        <option value="">Complemento 2</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 col-md-3 mt-2 mt-md-0">
-                                    <input type="text" class="form-control" id="numnom_complemento2" placeholder="Núm./Nom." disabled>
-                                </div>
-                            </div>
+						  <!-- Fila: Complementos 1 y 2 -->
+						  <div class="row g-2 mb-2">
+							<div class="col-6 col-md-3">
+							  <select class="form-select" id="complemento1" disabled>
+								<option value="">Complemento 1</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-3">
+							  <input type="text" class="form-control" id="numnom_complemento1" placeholder="Núm./Nom." disabled>
+							</div>
+							<div class="col-6 col-md-3 mt-2 mt-md-0">
+							  <select class="form-select" id="complemento2" disabled>
+								<option value="">Complemento 2</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-3 mt-2 mt-md-0">
+							  <input type="text" class="form-control" id="numnom_complemento2" placeholder="Núm./Nom." disabled>
+							</div>
+						  </div>
 
-                            <div class="row g-2">
-                                <div class="col-6 col-md-3">
-                                    <select class="form-select" id="complemento3" disabled>
-                                        <option value="">Complemento 3</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <input type="text" class="form-control" id="numnom_complemento3" placeholder="Núm./Nom." disabled>
-                                </div>
-                                <div class="col-6 col-md-3 mt-2 mt-md-0">
-                                    <select class="form-select" id="complemento4" disabled>
-                                        <option value="">Complemento 4</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 col-md-3 mt-2 mt-md-0">
-                                    <input type="text" class="form-control" id="numnom_complemento4" placeholder="Núm./Nom." disabled>
-                                </div>
-                            </div>
-                        </div>
+						  <!-- Fila: Complementos 3 y 4 -->
+						  <div class="row g-2">
+							<div class="col-6 col-md-3">
+							  <select class="form-select" id="complemento3" disabled>
+								<option value="">Complemento 3</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-3">
+							  <input type="text" class="form-control" id="numnom_complemento3" placeholder="Núm./Nom." disabled>
+							</div>
+							<div class="col-6 col-md-3 mt-2 mt-md-0">
+							  <select class="form-select" id="complemento4" disabled>
+								<option value="">Complemento 4</option>
+							  </select>
+							</div>
+							<div class="col-6 col-md-3 mt-2 mt-md-0">
+							  <input type="text" class="form-control" id="numnom_complemento4" placeholder="Núm./Nom." disabled>
+							</div>
+						  </div>
+						</div>
 
                         <div class="mb-3">
                             <label for="searchInput" class="form-label">Dirección Buscada:</label>
