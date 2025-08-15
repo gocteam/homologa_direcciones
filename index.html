@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <div class="container my-3 my-md-5">
+    <div class="container my-2 my-md-5">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
                 <div class="card shadow-lg">
@@ -71,13 +71,13 @@
 
 						  <!-- Fila: Vía principal y número en misma línea (mobile-friendly) -->
 						  <div class="row g-2 mb-2">
-							<div class="col-6 col-md-3">
+							<div class="col-6 col-md-2">
 							  <select class="form-select" id="via_ppal" disabled>
 								<option value="">Vía Ppal</option>
 							  </select>
 							</div>
 							<div class="col-6 col-md-2">
-							  <input type="number" class="form-control" id="num_via_ppal" placeholder="Número" disabled>
+							  <input type="number" class="form-control" id="num_via_ppal" placeholder="Núm" disabled>
 							</div>
 							<div class="col-4 col-md-2">
 							  <select class="form-select" id="letra_via_ppal" disabled>
@@ -103,32 +103,32 @@
 
 						  <!-- Fila: Intersección y número en misma línea (mobile-friendly) -->
 						  <div class="row g-2 mb-2">
-							<div class="col-6 col-md-3">
+							<div class="col-6 col-md-2">
 							  <select class="form-select" id="interseccion" disabled>
 								<option value="">Intersección</option>
 							  </select>
 							</div>
 							<div class="col-6 col-md-2">
-							  <input type="number" class="form-control" id="num_interseccion" placeholder="Número Int." disabled>
+							  <input type="number" class="form-control" id="num_interseccion" placeholder="Número" disabled>
 							</div>
 							<div class="col-4 col-md-2">
 							  <select class="form-select" id="letra_interseccion" disabled>
-								<option value="">Letra Int.</option>
+								<option value="">Letra</option>
 							  </select>
 							</div>
 							<div class="col-4 col-md-2">
 							  <select class="form-select" id="sufijo_interseccion" disabled>
-								<option value="">Sufijo Int.</option>
+								<option value="">Sufijo</option>
 								<option value="BIS">BIS</option>
 							  </select>
 							</div>
-							<div class="col-4 col-md-1">
+							<div class="col-4 col-md-2">
 							  <!-- AJUSTE: input de placa cambiado a numérico -->
 							  <input type="number" class="form-control" id="placa_dir" placeholder="Placa" disabled>
 							</div>
 							<div class="col-12 col-md-2 mt-2 mt-md-0">
 							  <select class="form-select" id="cuadrante_interseccion" disabled>
-								<option value="">Cuadrante Int.</option>
+								<option value="">Cuadrante.</option>
 								<option value="NORTE">NORTE</option>
 								<option value="SUR">SUR</option>
 								<option value="ESTE">ESTE</option>
@@ -136,7 +136,7 @@
 							  </select>
 							</div>
 						  </div>
-
+							<hr>
 						  <!-- Fila: Complementos 1 y 2 -->
 						  <div class="row g-2 mb-2">
 							<div class="col-6 col-md-3">
@@ -177,6 +177,8 @@
 							</div>
 						  </div>
 						</div>
+						
+						<hr>
 
                         <div class="mb-3">
                             <label for="searchInput" class="form-label">Dirección Buscada:</label>
@@ -192,14 +194,14 @@
                                     autocomplete="off"
                                 >
                                 <button class="btn btn-outline-secondary" type="button" id="copyBtn" title="Copiar dirección">
-                                    <i class="fas fa-copy"></i>
+                                    Copiar <i class="fas fa-copy"></i>
                                 </button>
                                 <button class="btn btn-outline-secondary" type="button" id="clearBtn" disabled>
-                                    <i class="fas fa-times"></i>
+                                    Limpiar <i class="fas fa-times"></i>
                                 </button>
                             </div>
                             <div class="form-text">
-                                Encuentra direcciones que comiencen con el texto ingresado.
+                                <small>Encuentra direcciones que comiencen con el texto ingresado.</small>
                             </div>
                         </div>
 
@@ -241,6 +243,9 @@
                         <div id="statsContainer" class="mt-3">
                             <small class="text-muted" id="statsText">Preparando datos...</small>
                         </div>
+						<div id="statsContainer" class="mt-3">
+                            <small class="text-muted" id="statsText2"><small>Fecha Actualizacion: 2025-08-14</small></small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -251,7 +256,7 @@
     <script>
         // Configuración
         const CONFIG = {
-            jsonFile: 'ms_address_minify.json', // Tu archivo JSON
+            jsonFile: 'ms_address_minify_v3.json', // Tu archivo JSON
             itemsPerPage: 10,
             searchDelay: 200 // ms de delay para evitar búsquedas excesivas
         };
